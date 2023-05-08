@@ -15,6 +15,9 @@ public class SaveManager : MonoBehaviour
     public Vector3? playerPosition = null;
     public float playerYEulerAngle = 0.0f;
     public HashSet<Vector2Int> felledTreesPositions = new HashSet<Vector2Int>();
+    public int days = 0;
+    public float dayCycle = 0;
+    //public Dictionary<ObjectType, int> objects = new Dictionary<ObjectType, int>();
 
     #endregion
 
@@ -55,6 +58,9 @@ public class SaveManager : MonoBehaviour
               playerPosition = Controller.GetInstance().GetPosition().ToVirtualPosition()
             , playerYEulerAngle = Controller.GetInstance().GetRotation().eulerAngles.y
             , felledTreesPositions = new HashSet<Vector2IntSerializable>(TreeSpawner.felledTreesPositions.Select(x=> new Vector2IntSerializable(x)))
+            , days = TimeManager.GetInstance().GetTimeValues().days
+            , dayCycle = TimeManager.GetInstance().GetTimeValues().dayCycle
+            , objects = Storage.Objects
         };
         binaryFormatter.Serialize(fileStream, saveData);
         fileStream.Close();
@@ -71,6 +77,9 @@ public class SaveManager : MonoBehaviour
             playerPosition = saveData.playerPosition;
             playerYEulerAngle = saveData.playerYEulerAngle;
             felledTreesPositions = new HashSet<Vector2Int>(saveData.felledTreesPositions.Select(x => (Vector2Int) x));
+            days = saveData.days;
+            dayCycle = saveData.dayCycle;
+            Storage.Objects = saveData.objects;
             fileStream.Close();
             Debug.Log("Load game data");
         }
@@ -98,10 +107,10 @@ public class SaveManager : MonoBehaviour
 
     public void CheckValues()
     {
-        Debug.Log($"{TreeSpawner.felledTreesPositions.Count}");
-        foreach (Vector2Int position in TreeSpawner.felledTreesPositions)
+        Debug.Log($"{Storage.Objects.Count}");
+        foreach (var value in Storage.Objects)
         {
-            Debug.Log(position);
+            Debug.Log(value);
         }
     }
 

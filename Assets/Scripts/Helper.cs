@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using Random = System.Random;
 
@@ -113,5 +115,65 @@ public static class Helper
     {
         {new DamageDamageablePair(DamageType.Ax, DamageableType.Tree), 4}
     };
+    #endregion
+
+    #region String Helper
+    public static string GetObjectName(ObjectType objectType)
+    {
+        switch (objectType)
+        {
+            case ObjectType.None        : return "Пусто";
+            case ObjectType.PalmDeck    : return "Пальмова колода";
+            case ObjectType.OakDeck     : return "Дубова колода";
+            case ObjectType.JuniperDeck : return "Ялівцева колода";
+            case ObjectType.PineDeck    : return "Соснова колода";
+            
+            default: throw new InvalidEnumArgumentException($"Not case for {objectType}");
+        }
+    }
+
+    public static string GetCountText(int count)
+    {
+        return $"x{count}";
+    }
+    
+    public static string GetSpriteName(ObjectType objectType)
+    {
+        switch (objectType)
+        {
+            case ObjectType.PalmDeck    : return "PalmDeck";
+            case ObjectType.OakDeck     : return "OakDeck";
+            case ObjectType.JuniperDeck : return "JuniperDeck";
+            case ObjectType.PineDeck    : return "PineDeck";
+            
+            default: throw new InvalidEnumArgumentException($"Not case for {objectType}");
+        }
+    }
+    #endregion
+
+    #region Enum Helper
+    public static T[] GetEnumValues<T>() where T : Enum
+    {
+        return (T[])Enum.GetValues(typeof(T));
+    }
+    
+    public static T[] GetRealEnumValues<T>() where T : Enum // without None
+    {
+        T[] allValues = (T[])Enum.GetValues(typeof(T));
+        int lenght = allValues.Length;
+        T[] allRealValues = new T[lenght - 1];
+
+        for (int i = 0; i < lenght - 1; i++)
+            allRealValues[i] = allValues[i + 1];
+        
+        return allRealValues;
+    }
+    #endregion
+
+    #region Sprite Atlas Helper
+    public static Sprite GetSpriteFromInventoryAtlas(string name)
+    {
+        return SpriteAtlasLoader.inventorySprites[name];
+    }
     #endregion
 }

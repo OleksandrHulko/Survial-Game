@@ -32,24 +32,29 @@ public class TimeManager : MonoBehaviour
     private static float _disableNightSkybox = 0.915f;
     private static float _fadingTime = 0.1f;
 
-    private TimeSpan _gameTime = TimeSpan.Zero;
-    private int _days = 0;
+    private static TimeManager _instance = null;
+    //private TimeSpan _gameTime = TimeSpan.Zero;
+    private static int _days = 0;
     private bool _usedNightSkybox = false;
     #endregion
 
 
     #region Private Methods
-
-    private void Start()
+    private void Awake()
     {
-        dayCycle = _disableNightSkybox;
+        _instance = this;
+    }
+
+    private void OnEnable()
+    {
+        SetSavedTimeValues();// TODO init values from SaveManager
     }
 
     private void Update()
     {
         IncrementDayCycle();
         ControlSky();
-        Debug.Log(GetTimeFromFirstDay());
+        //Debug.Log(GetTimeFromFirstDay());
 
         //DynamicGI.UpdateEnvironment();
     }
@@ -115,6 +120,12 @@ public class TimeManager : MonoBehaviour
             Debug.Log("DAY");
         }
     }
+    
+    private void SetSavedTimeValues()
+    {
+        _days = SaveManager.GetInstance().days;
+        dayCycle = SaveManager.GetInstance().dayCycle;
+    }
 
     private TimeSpan GetTimeFromFirstDay()
     {
@@ -138,5 +149,14 @@ public class TimeManager : MonoBehaviour
     #endregion
 
     #region Public Methods
+    public static TimeManager GetInstance()
+    {
+        return _instance;
+    }
+
+    public (int days, float dayCycle) GetTimeValues()
+    {
+        return (_days, dayCycle);
+    }
     #endregion
 }

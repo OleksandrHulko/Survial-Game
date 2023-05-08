@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,12 +6,17 @@ public class Player : MonoBehaviour
     #region Serialize Fields
     [SerializeField]
     private Ax ax = null;
+    [SerializeField]
+    private Camera cameraMain = null;
     #endregion
 
     #region Private Fields
     private static Player _instance = null;
+    
+    private const float RAY_DISTANCE = 3.0f;
 
     private bool _mouse0Pressed = false;
+    private Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0);
     #endregion
 
 
@@ -24,7 +29,9 @@ public class Player : MonoBehaviour
     private void Update()
     {
         ReadInput();
-        TryAttack();
+        
+        if (!CanTakeObject())
+            TryAttack();
     }
 
     private void ReadInput()
@@ -38,6 +45,24 @@ public class Player : MonoBehaviour
             return;
         
         ax.Attack();
+    }
+
+    private bool CanTakeObject()
+    {
+        if (!_mouse0Pressed)
+            return false;
+        
+        Ray ray = cameraMain.ViewportPointToRay(_screenCenter);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, RAY_DISTANCE))
+        {
+            if (raycastHit.collider.TryGetComponent(out ITake iTake))
+            {
+                iTake.Take();
+                return true;
+            }
+        }
+
+        return false;
     }
     #endregion
 
