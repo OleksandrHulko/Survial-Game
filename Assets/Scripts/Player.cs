@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -16,7 +15,7 @@ public class Player : MonoBehaviour
     private const float RAY_DISTANCE = 3.0f;
 
     private bool _mouse0Pressed = false;
-    private Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0);
+    private readonly Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0);
     #endregion
 
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UI : MonoBehaviour
@@ -10,12 +11,20 @@ public class UI : MonoBehaviour
     #endregion
 
     #region Private Fields
-    private bool _tildePressed = false;
-    private bool _iPressed = false;
+    private static bool _tildePressed = false;
+    private static bool _iPressed = false;
+
+    private static bool _consoleEnabled = false;
+    private static bool _inventoryEnabled = false;
     #endregion
     
     
     #region Private Fields
+    private void Awake()
+    {
+        Helper.SetVisibleCursor(false);
+    }
+
     private void Update()
     {
         ReadInput();
@@ -32,13 +41,35 @@ public class UI : MonoBehaviour
     private void TrySwitchConsole()
     {
         if (_tildePressed)
-            console.gameObject.SetActiveInverse();
+        {
+            _consoleEnabled = !_consoleEnabled;
+            console.gameObject.SetActive(_consoleEnabled);
+        }
     }
 
     private void TrySwitchInventory()
     {
-        if(_iPressed)
-            inventory.gameObject.SetActiveInverse();
+        if (_iPressed)
+        {
+            _inventoryEnabled = !_inventoryEnabled;
+            
+            SetEnabledPlayerControl(!_inventoryEnabled);
+            inventory.gameObject.SetActive(_inventoryEnabled);
+        }
+    }
+
+    private void SetEnabledPlayerControl( bool isEnabled )
+    {
+        Player    .GetInstance().enabled = isEnabled;
+        Controller.GetInstance().enabled = isEnabled;
+        Time.timeScale = isEnabled ? 1.0f : 0.0f;
+    }
+    #endregion
+
+    #region Public Methods
+    public static bool IsAnyWindowOpened()
+    {
+        return _consoleEnabled || _inventoryEnabled;
     }
     #endregion
 }

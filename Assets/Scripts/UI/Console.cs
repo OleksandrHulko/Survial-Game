@@ -73,7 +73,7 @@ public class Console : MonoBehaviour
 
     private void SetTimePlayingText()
     {
-        TimeSpan timeSpan = TimeSpan.FromSeconds(Time.time);
+        TimeSpan timeSpan = TimeSpan.FromSeconds(Time.unscaledTime);
         timePlayingText.text = string.Format(timePlayingTxt, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
     }
     

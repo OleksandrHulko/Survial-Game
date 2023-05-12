@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -48,6 +49,28 @@ public static class Helper
         Vector3 position = transform.position;
         position.z = z;
         transform.position = position;
+    }
+
+    public static void SetAlpha(this CanvasGroup canvasGroup, float alpha)
+    {
+        canvasGroup.alpha = alpha;
+        canvasGroup.blocksRaycasts = alpha > 0.5f;
+    }
+
+    public static IEnumerator SmoothlySetAlpha(this CanvasGroup canvasGroup, float targetAlpha, float seconds = 1.0f)
+    {
+        float startAlpha = canvasGroup.alpha;
+        float lerpValue = 0.0f;
+        
+        canvasGroup.blocksRaycasts = targetAlpha > 0.5f;
+        
+        while (Math.Abs(canvasGroup.alpha - targetAlpha) > 0.001f)
+        {
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, lerpValue);
+            lerpValue += Time.unscaledDeltaTime / seconds;
+            
+            yield return null;
+        }
     }
 
     public static float ClampedAngle(this float value, float min, float max)
@@ -122,11 +145,11 @@ public static class Helper
     {
         switch (objectType)
         {
-            case ObjectType.None        : return "Пусто";
-            case ObjectType.PalmDeck    : return "Пальмова колода";
-            case ObjectType.OakDeck     : return "Дубова колода";
-            case ObjectType.JuniperDeck : return "Ялівцева колода";
-            case ObjectType.PineDeck    : return "Соснова колода";
+            case ObjectType.None        : return Localization.NONE;
+            case ObjectType.PalmDeck    : return Localization.PALM_DECK;
+            case ObjectType.OakDeck     : return Localization.OAK_DECK;
+            case ObjectType.JuniperDeck : return Localization.JUNIPER_DECK;
+            case ObjectType.PineDeck    : return Localization.PINE_DECK;
             
             default: throw new InvalidEnumArgumentException($"Not case for {objectType}");
         }
@@ -174,6 +197,14 @@ public static class Helper
     public static Sprite GetSpriteFromInventoryAtlas(string name)
     {
         return SpriteAtlasLoader.inventorySprites[name];
+    }
+    #endregion
+
+    #region Other
+    public static void SetVisibleCursor(bool visible = true)
+    {
+        Cursor.visible = visible;
+        Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
     }
     #endregion
 }

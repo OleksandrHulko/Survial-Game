@@ -176,7 +176,7 @@ public class Controller : MonoBehaviour
     {
         return _instance;
     }
-    
+
     public Vector3 GetPosition()
     {
         return transform.position;

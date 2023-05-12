@@ -115,7 +115,7 @@ public class LandscapeSettingsConfig : ScriptableObject
 [Serializable]
 public class PerlinNoiseSettings
 {
-    #region Public Methods
+    #region Public Fields
     public int offsetX = 0;
     public int offsetY = 0;
     [Range(0.0001f,0.3f)]
