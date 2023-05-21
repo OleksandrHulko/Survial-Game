@@ -85,6 +85,7 @@ public class SaveManager : MonoBehaviour
         }
         else
         {
+            Storage.Objects = null;
             Debug.Log("File not found");
         }
     }

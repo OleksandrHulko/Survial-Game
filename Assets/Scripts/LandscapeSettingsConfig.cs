@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "LandscapeSettingsConfig", menuName = "ScriptableObjects/CreateNewLandscapeSettingsConfig")]

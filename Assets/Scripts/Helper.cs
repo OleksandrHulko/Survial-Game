@@ -57,7 +57,7 @@ public static class Helper
         canvasGroup.blocksRaycasts = alpha > 0.5f;
     }
 
-    public static IEnumerator SmoothlySetAlpha(this CanvasGroup canvasGroup, float targetAlpha, float seconds = 1.0f)
+    public static IEnumerator SmoothlySetAlpha(this CanvasGroup canvasGroup, float targetAlpha, float seconds = 0.5f)
     {
         float startAlpha = canvasGroup.alpha;
         float lerpValue = 0.0f;
@@ -91,7 +91,13 @@ public static class Helper
     public static bool GetTrueBoolWithProbability(this int probability, int seed)
     {
         Random random = new Random(seed);
-        return random.Next(1, 101) <= probability;// CHEK THIS
+        return random.Next(1, 101) <= probability;
+    }
+
+    public static bool CanUseForBuild(this ObjectType objectType)
+    {
+        byte value = (byte)objectType;
+        return value >= 6 && value <= 12;
     }
 
     public static Vector3 ToVirtualPosition(this Vector3 position)
@@ -108,6 +114,23 @@ public static class Helper
     {
         Vector2Int offset = ResetPositionManager.offset;
         return new Vector3(vector2Int.x - offset.x, 0.0f, vector2Int.y - offset.y);
+    }
+
+    public static Vector3Int RoundToSide(this Vector3 vector3)
+    {
+        float x = Mathf.Abs(vector3.x);
+        float y = Mathf.Abs(vector3.y);
+        float z = Mathf.Abs(vector3.z);
+
+        bool xIsMaxValue = x >= y && x >= z;
+        bool yIsMaxValue = y >= x && y >= z;
+
+        if (xIsMaxValue)
+            return new Vector3Int(Mathf.RoundToInt(vector3.x), 0, 0);
+        if (yIsMaxValue)
+            return new Vector3Int(0, Mathf.RoundToInt(vector3.y), 0);
+
+        return new Vector3Int(0, 0, Mathf.RoundToInt(vector3.z));
     }
 
     public static Vector2Int ToVector2Int(this Vector3 vector3)
@@ -150,6 +173,14 @@ public static class Helper
             case ObjectType.OakDeck     : return Localization.OAK_DECK;
             case ObjectType.JuniperDeck : return Localization.JUNIPER_DECK;
             case ObjectType.PineDeck    : return Localization.PINE_DECK;
+            case ObjectType.Board       : return Localization.BOARD;
+            case ObjectType.Plate1X1    : return Localization.PLATE_1_X_1;
+            case ObjectType.Plate2X2    : return Localization.PLATE_2_X_2;
+            case ObjectType.Plate1X1X1  : return Localization.PLATE_1_X_1_X_1;
+            case ObjectType.Plate2X1X2  : return Localization.PLATE_2_X_1_X_2;
+            case ObjectType.Window1X1   : return Localization.WINDOW_1_X_1;
+            case ObjectType.Window2X2   : return Localization.WINDOW_2_X_2;
+            case ObjectType.Door1X2     : return Localization.DOOR_1_X_2;
             
             default: throw new InvalidEnumArgumentException($"Not case for {objectType}");
         }
@@ -168,6 +199,14 @@ public static class Helper
             case ObjectType.OakDeck     : return "OakDeck";
             case ObjectType.JuniperDeck : return "JuniperDeck";
             case ObjectType.PineDeck    : return "PineDeck";
+            case ObjectType.Board       : return "Board";
+            case ObjectType.Plate1X1    : return "Plate1x1";
+            case ObjectType.Plate2X2    : return "Plate2x2";
+            case ObjectType.Plate1X1X1  : return "Plate1x1x1";
+            case ObjectType.Plate2X1X2  : return "Plate2x1x2";
+            case ObjectType.Window1X1   : return "Window1x1";
+            case ObjectType.Window2X2   : return "Window2x2";
+            case ObjectType.Door1X2     : return "Door1x2";
             
             default: throw new InvalidEnumArgumentException($"Not case for {objectType}");
         }
