@@ -51,18 +51,21 @@ public static class Helper
         transform.position = position;
     }
 
-    public static void SetAlpha(this CanvasGroup canvasGroup, float alpha)
+    public static void SetAlpha(this CanvasGroup canvasGroup, float alpha, bool notBlockingRaycast = false)
     {
         canvasGroup.alpha = alpha;
-        canvasGroup.blocksRaycasts = alpha > 0.5f;
+        
+        if (!notBlockingRaycast)
+            canvasGroup.blocksRaycasts = alpha > 0.5f;
     }
 
-    public static IEnumerator SmoothlySetAlpha(this CanvasGroup canvasGroup, float targetAlpha, float seconds = 0.5f)
+    public static IEnumerator SmoothlySetAlpha(this CanvasGroup canvasGroup, float targetAlpha, float seconds = 0.5f, bool notBlockingRaycast = false)
     {
         float startAlpha = canvasGroup.alpha;
         float lerpValue = 0.0f;
-        
-        canvasGroup.blocksRaycasts = targetAlpha > 0.5f;
+
+        if (!notBlockingRaycast)
+            canvasGroup.blocksRaycasts = targetAlpha > 0.5f;
         
         while (Math.Abs(canvasGroup.alpha - targetAlpha) > 0.001f)
         {
@@ -100,6 +103,27 @@ public static class Helper
         return value >= 6 && value <= 12;
     }
 
+    public static bool IsFoundation(this ObjectType objectType)
+    {
+        byte value = (byte)objectType;
+        return value >= 8 && value <= 9;
+    }
+
+    public static bool IsBuildingObjectLayer(this int layer)
+    {
+        return layer == BuildingObjectLayer;
+    }
+
+    public static bool IsFoundationLayer(this int layer)
+    {
+        return layer == FoundationLayer;
+    }
+
+    public static bool IsSurfaceLayer(this int layer)
+    {
+        return layer == SurfaceLayer;
+    }
+
     public static Vector3 ToVirtualPosition(this Vector3 position)
     {
         Vector2Int offset = ResetPositionManager.offset;
@@ -118,6 +142,8 @@ public static class Helper
 
     public static Vector3Int RoundToSide(this Vector3 vector3)
     {
+        vector3.Normalize();
+        
         float x = Mathf.Abs(vector3.x);
         float y = Mathf.Abs(vector3.y);
         float z = Mathf.Abs(vector3.z);
@@ -237,6 +263,13 @@ public static class Helper
     {
         return SpriteAtlasLoader.inventorySprites[name];
     }
+    #endregion
+
+    #region LayerMask Helper
+    public static readonly int BuildingObjectLayer = LayerMask.NameToLayer("Building Object");
+    public static readonly int FoundationLayer     = LayerMask.NameToLayer("Foundation");
+    public static readonly int TreeLayer           = LayerMask.NameToLayer("Tree");
+    public static readonly int SurfaceLayer        = LayerMask.NameToLayer("Surface");
     #endregion
 
     #region Other

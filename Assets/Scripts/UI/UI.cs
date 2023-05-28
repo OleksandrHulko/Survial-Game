@@ -8,20 +8,28 @@ public class UI : MonoBehaviour
     private Console console = null;
     [SerializeField]
     private Inventory inventory = null;
+    [SerializeField]
+    private Building building = null;
     #endregion
 
     #region Private Fields
+    private static UI _instance = null;
+    
     private static bool _tildePressed = false;
     private static bool _iPressed = false;
 
     private static bool _consoleEnabled = false;
     private static bool _inventoryEnabled = false;
     #endregion
+
+    #region Public Fields
+    #endregion
     
     
     #region Private Fields
     private void Awake()
     {
+        _instance = this;
         Helper.SetVisibleCursor(false);
     }
 
@@ -64,12 +72,22 @@ public class UI : MonoBehaviour
         Controller.GetInstance().enabled = isEnabled;
         Time.timeScale = isEnabled ? 1.0f : 0.0f;
     }
+
+    private void SetActiveBuildingNonStatic(bool active)
+    {
+        building.gameObject.SetActive(active);
+    }
     #endregion
 
     #region Public Methods
     public static bool IsAnyWindowOpened()
     {
         return _consoleEnabled || _inventoryEnabled;
+    }
+
+    public static void SetActiveBuilding(bool active)
+    {
+        _instance.SetActiveBuildingNonStatic(active);
     }
     #endregion
 }

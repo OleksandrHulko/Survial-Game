@@ -17,9 +17,11 @@ public static class Localization
     #endregion
 
     #region UI
-    public const string INVENTORY    = "Інвентар";
-    public const string CRAFT        = "Крафт";
-    public const string CRAFTING     = "Створити";
-    public const string NO_RESOURCES = "Недостатньо ресурсів";
+    public const string INVENTORY              = "Інвентар";
+    public const string CRAFT                  = "Крафт";
+    public const string CRAFTING               = "Створити";
+    public const string NO_RESOURCES           = "Недостатньо ресурсів";
+    public const string BUILDING_INFO_ROTATION = "Натисніть <color=red>1</color>, <color=#00FF00>2</color>, <color=blue>3</color> для повороту";
+    public const string BUILDING_INFO_MOUSE    = "ЛКМ - встановити.\nСКМ - видалити.\nПКМ - відмінити.";
     #endregion
 }

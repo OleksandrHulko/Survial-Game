@@ -141,6 +141,11 @@ public abstract class PlayerState
     {
         
     }
+    
+    protected virtual void Mouse2Handler()
+    {
+        
+    }
 
     public virtual void Update()
     {
@@ -148,6 +153,8 @@ public abstract class PlayerState
             Mouse0Handler();
         if(Input.GetKeyDown(KeyCode.Mouse1))
             Mouse1Handler();
+        if(Input.GetKeyDown(KeyCode.Mouse2))
+            Mouse2Handler();
     }
 
     public virtual void LateUpdate()
@@ -157,6 +164,11 @@ public abstract class PlayerState
     
     public virtual void OnSetState()
     {
+        Type type = GetType();
+
+        if (type == typeof(FreePlayerState) || type == typeof(BusyPlayerState))
+            UI.SetActiveBuilding(false);
+        
         SetLayerWeight();
     }
 
@@ -220,16 +232,21 @@ class BusyPlayerState : PlayerState
 class BuildPlayerState : PlayerState
 {
     private BuildingObject _buildingObject = null;
-    
+    private ObjectType _objectType = ObjectType.None;
+    private bool _isInventoryOpen = false;
+
     public BuildPlayerState(Camera playerCamera) : base(playerCamera)
     {
+        Inventory.OnInventoryOpen += OnInventoryOpenHandler;
+        Inventory.OnInventoryClosed += OnInventoryClosedHandler;
     }
 
     protected override void Mouse0Handler()
     {
-        _buildingObject.Put();
-        
-        if (Storage.CountOfObjectType(Inventory.selectedItem.objectType) > 0)
+        if (!_buildingObject || !_buildingObject.CanPut())
+            return;
+
+        if (Storage.CountOfObjectType(_objectType) > 0)
             InitBuildingObject();
         else
             Player.SetPlayerState(PlayerStatE.Free);
@@ -237,25 +254,30 @@ class BuildPlayerState : PlayerState
 
     protected override void Mouse1Handler()
     {
-        Object.Destroy(_buildingObject.gameObject);
-        Player.SetPlayerState(PlayerStatE.Free);
+        TryDeleteCurrentBuildingObject();
+    }
+
+    protected override void Mouse2Handler()
+    {
+        TryDeleteBuildingObject();
+
+        TryDeleteCurrentBuildingObject();
     }
     
     public override void LateUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            _buildingObject.TryChangeRotation();
-
-        (Vector3 position, Vector3 normal) positionAndNormal = GetRaycastPositionAndNormal();
+        if (_isInventoryOpen || !_buildingObject)
+            return;
         
-        _buildingObject.TrySetPositionAndRotation(positionAndNormal.position , positionAndNormal.normal);
-    }
+        (Vector3 position, Vector3 normal, int layer) raycastInfo = GetRaycastInfo();
 
-    public override void OnSetState()
-    {
-        base.OnSetState();
-        
-        InitBuildingObject();
+        _buildingObject.TrySetPositionAndRotation(raycastInfo, _playerCamera.transform.position);
+
+        _buildingObject.TryChangeRotation(
+              Input.GetKeyDown(KeyCode.Alpha1)
+            , Input.GetKeyDown(KeyCode.Alpha2)
+            , Input.GetKeyDown(KeyCode.Alpha3)
+        );
     }
 
     protected override void SetLayerWeight()
@@ -265,18 +287,61 @@ class BuildPlayerState : PlayerState
 
     private void InitBuildingObject()
     {
-        _buildingObject = Object.Instantiate(PrefabsStorage.GetBuildingObject(Inventory.selectedItem.objectType));
+        _buildingObject = Object.Instantiate(PrefabsStorage.GetBuildingObject(_objectType), Vector3.down, Quaternion.identity);
+    }
+
+    private void OnInventoryOpenHandler()
+    {
+        _isInventoryOpen = true;
+        
+        if (_buildingObject)
+            _buildingObject.Delete();
+        
+        UI.SetActiveBuilding(false);
+    }
+
+    private void OnInventoryClosedHandler( ObjectType objectType )
+    {
+        _isInventoryOpen = false;
+        
+        _objectType = objectType;
+
+        if (_objectType.CanUseForBuild())// redudant
+        {
+            InitBuildingObject();
+            UI.SetActiveBuilding(true);
+        }
     }
     
-    private (Vector3 position, Vector3 normal) GetRaycastPositionAndNormal()
+    private (Vector3 position, Vector3 normal, int layer) GetRaycastInfo()
     {
         Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
-        
+
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 10f))
         {
-            return (raycastHit.point , raycastHit.normal.normalized);
+            return (raycastHit.point, raycastHit.normal.normalized, raycastHit.collider.gameObject.layer);
         }
 
-        return (Vector3.zero, Vector3.up);
+        return (Vector3.zero, Vector3.up, 0);
+    }
+
+    private void TryDeleteBuildingObject()
+    {
+        Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
+
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 10f))
+        {
+            if (raycastHit.collider.TryGetComponent(out BuildingObject buildingObject))
+                buildingObject.Delete();
+        }
+    }
+
+    private void TryDeleteCurrentBuildingObject()
+    {
+        if (_buildingObject)
+        {
+            _buildingObject.Delete();
+            Inventory.selectedItem = (null, ObjectType.None);
+        }
     }
 }

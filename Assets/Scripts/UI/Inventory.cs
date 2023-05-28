@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -40,6 +41,8 @@ public class Inventory : MonoBehaviour
 
     #region Public Fields
     public static (InventoryItem inventoryItem, ObjectType objectType) selectedItem = (null, ObjectType.None);
+    public static Action OnInventoryOpen = null;
+    public static Action<ObjectType> OnInventoryClosed = null;
     #endregion
     
     
@@ -65,6 +68,8 @@ public class Inventory : MonoBehaviour
         Helper.SetVisibleCursor();
         
         ShowNeededTab();
+        
+        OnInventoryOpen?.Invoke();
     }
 
     private void OnDisable()
@@ -73,6 +78,8 @@ public class Inventory : MonoBehaviour
         
         inventoryCanvasG.SetAlpha(0.0f);
         craftCanvasG.SetAlpha(0.0f);
+
+        OnInventoryClosed?.Invoke(selectedItem.objectType);
     }
 
     private void SpawnInventoryItems()

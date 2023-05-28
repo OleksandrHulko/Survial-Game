@@ -103,7 +103,6 @@ public class Console : MonoBehaviour
     #endregion
 
     #region Public Methods
-
     public void RestoreFelledTrees()
     {
         TreeSpawner.felledTreesPositions.Clear();
