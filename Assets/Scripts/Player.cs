@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -234,6 +236,7 @@ class BuildPlayerState : PlayerState
     private BuildingObject _buildingObject = null;
     private ObjectType _objectType = ObjectType.None;
     private bool _isInventoryOpen = false;
+    private const int RAY_DISTANCE = 10;
 
     public BuildPlayerState(Camera playerCamera) : base(playerCamera)
     {
@@ -249,7 +252,10 @@ class BuildPlayerState : PlayerState
         if (Storage.CountOfObjectType(_objectType) > 0)
             InitBuildingObject();
         else
-            Player.SetPlayerState(PlayerStatE.Free);
+        {
+            Player.SetPlayerState(PlayerStatE.Busy);
+            _buildingObject = null;
+        }
     }
 
     protected override void Mouse1Handler()
@@ -268,10 +274,8 @@ class BuildPlayerState : PlayerState
     {
         if (_isInventoryOpen || !_buildingObject)
             return;
-        
-        (Vector3 position, Vector3 normal, int layer) raycastInfo = GetRaycastInfo();
 
-        _buildingObject.TrySetPositionAndRotation(raycastInfo, _playerCamera.transform.position);
+        _buildingObject.TrySetPositionAndRotation(GetRaycastHit(), _playerCamera.transform.position);
 
         _buildingObject.TryChangeRotation(
               Input.GetKeyDown(KeyCode.Alpha1)
@@ -288,16 +292,17 @@ class BuildPlayerState : PlayerState
     private void InitBuildingObject()
     {
         _buildingObject = Object.Instantiate(PrefabsStorage.GetBuildingObject(_objectType), Vector3.down, Quaternion.identity);
+        _buildingObject.Init();
     }
 
     private void OnInventoryOpenHandler()
     {
         _isInventoryOpen = true;
         
+        UI.SetActiveBuilding(false);
+        
         if (_buildingObject)
             _buildingObject.Delete();
-        
-        UI.SetActiveBuilding(false);
     }
 
     private void OnInventoryClosedHandler( ObjectType objectType )
@@ -306,33 +311,32 @@ class BuildPlayerState : PlayerState
         
         _objectType = objectType;
 
+        if (_objectType == ObjectType.None)
+            Player.SetPlayerState(PlayerStatE.Busy);
+
         if (_objectType.CanUseForBuild())// redudant
         {
-            InitBuildingObject();
             UI.SetActiveBuilding(true);
+            InitBuildingObject();
         }
     }
     
-    private (Vector3 position, Vector3 normal, int layer) GetRaycastInfo()
+    private RaycastHit GetRaycastHit()
     {
         Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
+        Physics.Raycast(ray, out RaycastHit raycastHit, RAY_DISTANCE);
 
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 10f))
-        {
-            return (raycastHit.point, raycastHit.normal.normalized, raycastHit.collider.gameObject.layer);
-        }
-
-        return (Vector3.zero, Vector3.up, 0);
+        return raycastHit;
     }
 
     private void TryDeleteBuildingObject()
     {
         Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
 
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 10f))
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, RAY_DISTANCE))
         {
             if (raycastHit.collider.TryGetComponent(out BuildingObject buildingObject))
-                buildingObject.Delete();
+                buildingObject.DeletePutted();
         }
     }
 

@@ -36,11 +36,13 @@ public class Console : MonoBehaviour
     {
         StartCoroutine(UpdateFpsText());
         StartCoroutine(UpdateFelledTreesCountText());
+        Helper.SetVisibleCursor();
     }
 
     private void OnDisable()
     {
         StopAllCoroutines();
+        Helper.SetVisibleCursor(false);
     }
 
     private void Update()
@@ -106,6 +108,25 @@ public class Console : MonoBehaviour
     public void RestoreFelledTrees()
     {
         TreeSpawner.felledTreesPositions.Clear();
+    }
+
+    public void AddAllObjects()
+    {
+        int count = 10;
+        ObjectType[] objects = Helper.GetRealEnumValues<ObjectType>();
+
+        foreach (ObjectType @object in objects)
+            Storage.Add(@object, count);
+    }
+
+    public void DeleteAllObjects()
+    {
+        Storage.Objects = null;
+    }
+
+    public void DeleteAllBuildings()
+    {
+        BuildingObjectsSpawner.buildingObjectInfos.Clear();
     }
     #endregion
 }

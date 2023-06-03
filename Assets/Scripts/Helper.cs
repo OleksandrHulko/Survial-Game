@@ -134,10 +134,16 @@ public static class Helper
         return position;
     }
 
-    public static Vector3 ToRealPosition(this Vector2Int vector2Int)
+    public static Vector3 ToRealPosition(this Vector2Int vector2Int, float y = 0.0f)
     {
         Vector2Int offset = ResetPositionManager.offset;
-        return new Vector3(vector2Int.x - offset.x, 0.0f, vector2Int.y - offset.y);
+        return new Vector3(vector2Int.x - offset.x, y, vector2Int.y - offset.y);
+    }
+    
+    public static Vector3 ToRealPosition(this Vector3 vector3)
+    {
+        Vector2Int offset = ResetPositionManager.offset;
+        return new Vector3(vector3.x - offset.x, vector3.y, vector3.z - offset.y);
     }
 
     public static Vector3Int RoundToSide(this Vector3 vector3)

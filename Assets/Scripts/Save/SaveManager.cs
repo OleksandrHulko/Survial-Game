@@ -61,6 +61,7 @@ public class SaveManager : MonoBehaviour
             , days = TimeManager.GetInstance().GetTimeValues().days
             , dayCycle = TimeManager.GetInstance().GetTimeValues().dayCycle
             , objects = Storage.Objects
+            , buildingObjects = new List<BuildingObjectInfoSerializable>(BuildingObjectsSpawner.buildingObjectInfos.Select(x=>(BuildingObjectInfoSerializable)x))
         };
         binaryFormatter.Serialize(fileStream, saveData);
         fileStream.Close();
@@ -80,12 +81,14 @@ public class SaveManager : MonoBehaviour
             days = saveData.days;
             dayCycle = saveData.dayCycle;
             Storage.Objects = saveData.objects;
+            BuildingObjectsSpawner.buildingObjectInfos = new List<BuildingObjectInfo>(saveData.buildingObjects.Select(x => (BuildingObjectInfo)x));
             fileStream.Close();
             Debug.Log("Load game data");
         }
         else
         {
             Storage.Objects = null;
+            BuildingObjectsSpawner.buildingObjectInfos = new List<BuildingObjectInfo>();
             Debug.Log("File not found");
         }
     }

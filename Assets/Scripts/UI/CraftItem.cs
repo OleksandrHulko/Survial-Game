@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CraftItem : MonoBehaviour
 {
     #region Serialize Fields
     [SerializeField]
     private Transform content = null;
+    [SerializeField]
+    private ScrollRect scrollRect = null;
     [SerializeField]
     private InventoryItem inventoryItem = null;
     [SerializeField]
@@ -40,6 +43,8 @@ public class CraftItem : MonoBehaviour
         {
             Instantiate(craftRecipeItem, content).Init(objectTypeIntPairArray, _result);
         }
+
+        scrollRect.enabled = _resources.Length > 2;
     }
     #endregion
 }

@@ -10,4 +10,5 @@ public class SaveData
     public int days;
     public float dayCycle;
     public Dictionary<ObjectType, int> objects;
+    public List<BuildingObjectInfoSerializable> buildingObjects;
 }

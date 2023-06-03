@@ -45,7 +45,10 @@ public class Ax : MonoBehaviour , IDamage
             damageCollider.enabled = false;
             
             if (_canDamage)
+            {
                 iDamageable.GetDamaged(_damageType);
+                EffectsManager.Instance.PlayAxCutting(other.GetContact(0).point);
+            }
         }
     }
 

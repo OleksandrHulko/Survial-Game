@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,7 @@ public class Chunk : MonoBehaviour
     private float[,] _heights;
 
     private List<Tree> _trees = new List<Tree>();//set capacity
+    private List<BuildingObject> _buildingObjects = new List<BuildingObject>();
     private byte _maxTreeCount = 128;
     #endregion
 
@@ -54,6 +56,8 @@ public class Chunk : MonoBehaviour
         terrain.transform.position = position.ToRealPosition();
         
         SetTreesPosition();
+        SpawnBuildings();
+        
         ResetPositionManager.AddTransform(transform);
     }
 
@@ -67,6 +71,7 @@ public class Chunk : MonoBehaviour
         terrain.transform.position = position.ToRealPosition();
         
         SetTreesPosition();
+        SpawnBuildings();
     }
 
     public void SetNeighbors(Chunk[] neighbors)
@@ -94,6 +99,11 @@ public class Chunk : MonoBehaviour
         if (_bottomNeighbor)
             _bottomNeighbor.ReinitLite();
     }
+
+    public void AddNewBuildingObjects( BuildingObject buildingObject )
+    {
+        _buildingObjects.Add(buildingObject);
+    }
     #endregion
     
     #region Private Methods
@@ -105,6 +115,16 @@ public class Chunk : MonoBehaviour
     private void SetTreesPosition()
     {
         TreeSpawner.InitTrees(transform, _position, _landscapeSettingsConfig, _heights, ref _trees);
+    }
+
+    private void SpawnBuildings()
+    {
+        BuildingObjectsSpawner.InitList(_position, transform, _buildingObjects, ReinitBuildingObjectsList);
+    }
+
+    private void ReinitBuildingObjectsList(List<BuildingObject> buildingObjects)
+    {
+        _buildingObjects = buildingObjects;
     }
     #endregion
 }
