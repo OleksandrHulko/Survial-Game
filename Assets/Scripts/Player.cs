@@ -40,12 +40,14 @@ public class Player : MonoBehaviour
         SetPlayerState(_busyPlayerState);
     }
 
+    private void OnDestroy()
+    {
+        _buildPlayerState.Destroy();
+    }
+
     private void Update()
     {
         ReadInput();
-        
-        //if(_mouse0Pressed)
-        //    _playerState.Mouse0Handler();
         
         _playerState.Update();
     }
@@ -242,6 +244,12 @@ class BuildPlayerState : PlayerState
     {
         Inventory.OnInventoryOpen += OnInventoryOpenHandler;
         Inventory.OnInventoryClosed += OnInventoryClosedHandler;
+    }
+
+    public void Destroy()
+    {
+        Inventory.OnInventoryOpen -= OnInventoryOpenHandler;
+        Inventory.OnInventoryClosed -= OnInventoryClosedHandler;
     }
 
     protected override void Mouse0Handler()

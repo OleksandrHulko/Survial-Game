@@ -12,7 +12,7 @@ public class LandscapeGenerator : MonoBehaviour
     [Space]
     [Header("Width of chunk in meters")]
     [SerializeField]
-    private short chunkWidth;
+    private ushort chunkWidth;
     [Header("Max landscape height in meters")]
     [SerializeField]
     private short chunkHeight;
@@ -42,6 +42,9 @@ public class LandscapeGenerator : MonoBehaviour
     private void Awake()
     {
         _landscapeGenerator = this;
+
+        renderDistance = SettingsSaver.renderDistance;
+        chunkWidth     = SettingsSaver.chunkWidth;
     }
 
     private void Start()
@@ -136,10 +139,7 @@ public class LandscapeGenerator : MonoBehaviour
                 _chunksDictionary[spawn[i]].ReinitLiteNeighbors();
                 yield return null;
             }
-            
-            if(spawn.Count != despawn.Count)
-                Debug.LogWarning($"spawn count: {spawn.Count} | despawn.Count: {despawn.Count}");
-        
+
             spawn.Clear();
             despawn.Clear();
         }
@@ -189,7 +189,7 @@ public class LandscapeGenerator : MonoBehaviour
 
     public float GetSurfaceHeight( Vector2Int position )
     {
-        return landscapeSettingsConfig.GetHeight(position) * chunkHeight;
+        return landscapeSettingsConfig.GetHeight(new Vector2Int(position.y, position.x)) * chunkHeight;
     }
     #endregion
 }

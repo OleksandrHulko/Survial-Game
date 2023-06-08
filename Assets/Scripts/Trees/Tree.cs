@@ -49,7 +49,7 @@ public class Tree : MonoBehaviour , IDamageable
         if (CurrentHealth == 0)
             Destroy();
         
-        Debug.Log(CurrentHealth);
+        //Debug.Log(CurrentHealth);
     }
     #endregion
     

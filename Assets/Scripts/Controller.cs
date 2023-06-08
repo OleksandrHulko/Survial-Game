@@ -21,32 +21,29 @@ public class Controller : MonoBehaviour
     private static readonly int _y    = Animator.StringToHash("Y");
     private static readonly int _jump = Animator.StringToHash("Jump");
 
-    private const float WALK_SPEED = 1.5f;
-    private const float RUN_SPEED = 60.0f;
-    private const float JUMP_SPEED = 3.0f;
-    private const float G = -9.81f;
+    private const  float WALK_SPEED = 1.5f;
+    private static float RUN_SPEED = 6.0f;
+    private const  float JUMP_SPEED = 5.0f;
+    private const  float G = -9.81f;
 
     private CameraControl _cameraControl = null;
     private FirstPersonCameraControl _firstPersonCameraControl = null;
     private ThirdPersonCameraControl _thirdPersonCameraControl = null;
 
-    private bool _spacePressed = false;
-    private bool _vPressed = false;
-    private bool _isGrounded = false;
-    private bool _isMoving = false;
-    #endregion
-
-    #region Private Fields
     private Vector3 _speed = Vector3.zero;
     private Vector2 _axis  = Vector2.zero;
-
+    
     private float _verticalSpeed = 0.0f;
-
     private float _horizontalAxis = 0.0f;
     private float _verticalAxis = 0.0f;
     private float _mouseXAxis = 0.0f;
     private float _mouseYAxis = 0.0f;
     private float _accelerationAxis = 0.0f;
+    
+    private bool _spacePressed = false;
+    private bool _vPressed = false;
+    private bool _isGrounded = false;
+    private bool _isMoving = false;
     #endregion
 
 
@@ -157,7 +154,12 @@ public class Controller : MonoBehaviour
 
     private void SetSavedHeight()
     {
-        transform.SetYPosition(SaveManager.GetInstance().playerPosition?.y ?? LandscapeGenerator.GetInstance().GetSurfaceHeight(transform.position.ToVector2Int()));
+        float y = SaveManager.GetInstance().playerPosition?.y ?? LandscapeGenerator.GetInstance().GetSurfaceHeight(transform.position.ToVirtualPosition().ToVector2Int());
+
+        if (y <= -1)
+            y = LandscapeGenerator.GetInstance().GetSurfaceHeight(transform.position.ToVirtualPosition().ToVector2Int());
+        
+        transform.SetYPosition(y);
     }
 
     private float GetNeededMoveSpeed()
@@ -175,6 +177,11 @@ public class Controller : MonoBehaviour
     public static Controller GetInstance()
     {
         return _instance;
+    }
+
+    public static void ChangeRunSpeed( bool useNormalSpeed = true )
+    {
+        RUN_SPEED = useNormalSpeed ? 6.0f : 60.0f;
     }
 
     public Vector3 GetPosition()

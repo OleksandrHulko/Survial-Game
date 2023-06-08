@@ -1,4 +1,4 @@
-public static class Settings
+public static class SettingsSaver
 {
     public static float maxWaterLevel = 72.8f;
     public static float maxSandLevel  = 92.7f;

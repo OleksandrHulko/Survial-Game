@@ -22,18 +22,17 @@ public class Chunk : MonoBehaviour
     private Chunk _topNeighbor = null;
     private Chunk _rightNeighbor = null;
     private Chunk _bottomNeighbor = null;
-    private short _width;
+    private ushort _width;
     private short _height;
     private float[,] _heights;
 
     private List<Tree> _trees = new List<Tree>();//set capacity
     private List<BuildingObject> _buildingObjects = new List<BuildingObject>();
-    private byte _maxTreeCount = 128;
     #endregion
 
 
     #region Public Methods
-    public void Init( LandscapeSettingsConfig landscapeSettingsConfig, Vector2Int position, short width, short height )
+    public void Init( LandscapeSettingsConfig landscapeSettingsConfig, Vector2Int position, ushort width, short height )
     {
         _landscapeSettingsConfig = landscapeSettingsConfig;
         _position = position;

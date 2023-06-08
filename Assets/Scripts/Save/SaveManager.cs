@@ -16,9 +16,7 @@ public class SaveManager : MonoBehaviour
     public float playerYEulerAngle = 0.0f;
     public HashSet<Vector2Int> felledTreesPositions = new HashSet<Vector2Int>();
     public int days = 0;
-    public float dayCycle = 0;
-    //public Dictionary<ObjectType, int> objects = new Dictionary<ObjectType, int>();
-
+    public float dayCycle = 0.0f;
     #endregion
 
     #region Private Methods
@@ -29,7 +27,7 @@ public class SaveManager : MonoBehaviour
         LoadGameData();
     }
 
-    private void Update()
+    private void NoUpdate()
     {
         if(Input.GetKeyDown(KeyCode.F1))
             SaveGameData();
@@ -87,6 +85,8 @@ public class SaveManager : MonoBehaviour
         }
         else
         {
+            playerPosition = new Vector3(100, -1, -50);
+            dayCycle = 0.3f;
             Storage.Objects = null;
             BuildingObjectsSpawner.buildingObjectInfos = new List<BuildingObjectInfo>();
             Debug.Log("File not found");

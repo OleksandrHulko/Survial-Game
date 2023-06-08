@@ -56,7 +56,6 @@ public class Inventory : MonoBehaviour
         _craftRectT     = craftContT    .GetComponent<RectTransform>();
 
         _tabsCount = Helper.GetEnumValues<InventoryTabs>().Length;
-        
         rightButton.onClick.AddListener(RightBtnClickHandler);
         leftButton .onClick.AddListener(LeftBtnClickHandler);
         
@@ -163,8 +162,7 @@ public class Inventory : MonoBehaviour
         index = Mathf.Clamp(switchToPreviousTab ? --index : ++index, 1, _tabsCount);
 
         _currentTab = (InventoryTabs)index;
-
-
+        
         rightButton.gameObject.SetActive(index < _tabsCount);
         leftButton.gameObject.SetActive(index > 1);
     }

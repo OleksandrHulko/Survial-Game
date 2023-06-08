@@ -88,7 +88,7 @@ public static class Helper
 
     public static float GetRealHeightFromTerrainHeight(this float height)
     {
-        return height * Settings.chunkHeight;
+        return height * SettingsSaver.chunkHeight;
     }
 
     public static bool GetTrueBoolWithProbability(this int probability, int seed)
@@ -172,16 +172,16 @@ public static class Helper
 
     public static BiomeType GetBiomesType(this float height)
     {
-        if (height <= Settings.maxWaterLevel)
+        if (height <= SettingsSaver.maxWaterLevel)
             return BiomeType.Water;
         
-        if (height <= Settings.maxSandLevel)
+        if (height <= SettingsSaver.maxSandLevel)
             return BiomeType.Sand;
         
-        if (height <= Settings.maxGrassLevel)
+        if (height <= SettingsSaver.maxGrassLevel)
             return BiomeType.Grass;
         
-        if (height <= Settings.maxRockLevel)
+        if (height <= SettingsSaver.maxRockLevel)
             return BiomeType.Rock;
 
         return BiomeType.Snow;

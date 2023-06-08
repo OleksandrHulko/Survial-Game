@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f5a58e16ba31d4aaf1a2d7e953d6f4, type: 3}
+  m_Name: CraftRecipesConfig
+  m_EditorClassIdentifier: 
+  craftRecipes:
+  - nestedRecipes:
+    - resources:
+      - objectType: 1
+        count: 1
+    - resources:
+      - objectType: 2
+        count: 1
+    - resources:
+      - objectType: 3
+        count: 1
+    - resources:
+      - objectType: 4
+        count: 1
+    result:
+      objectType: 5
+      count: 20
+  - nestedRecipes:
+    - resources:
+      - objectType: 5
+        count: 10
+    result:
+      objectType: 6
+      count: 1
+  - nestedRecipes:
+    - resources:
+      - objectType: 5
+        count: 40
+    result:
+      objectType: 7
+      count: 1
+  - nestedRecipes:
+    - resources:
+      - objectType: 5
+        count: 60
+    result:
+      objectType: 8
+      count: 1
+  - nestedRecipes:
+    - resources:
+      - objectType: 5
+        count: 160
+    result:
+      objectType: 9
+      count: 1
+  - nestedRecipes:
+    - resources:
+      - objectType: 5
+        count: 4
+    result:
+      objectType: 10
+      count: 1
+  - nestedRecipes:
+    - resources:
+      - objectType: 5
+        count: 8
+    result:
+      objectType: 11
+      count: 1
+  - nestedRecipes:
+    - resources:
+      - objectType: 5
+        count: 5
+    result:
+      objectType: 12
+      count: 1

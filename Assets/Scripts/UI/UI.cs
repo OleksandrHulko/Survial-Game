@@ -10,6 +10,8 @@ public class UI : MonoBehaviour
     private Inventory inventory = null;
     [SerializeField]
     private Building building = null;
+    [SerializeField]
+    private PausePanel pausePanel = null;
     #endregion
 
     #region Private Fields
@@ -17,6 +19,7 @@ public class UI : MonoBehaviour
     
     private static bool _tildePressed = false;
     private static bool _iPressed = false;
+    private static bool _escapePressed = false;
 
     private static bool _consoleEnabled = false;
     private static bool _inventoryEnabled = false;
@@ -30,6 +33,9 @@ public class UI : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+        
+        pausePanel.Init();
+        
         Helper.SetVisibleCursor(false);
     }
 
@@ -38,18 +44,23 @@ public class UI : MonoBehaviour
         ReadInput();
         TrySwitchConsole();
         TrySwitchInventory();
+        TrySwitchPause();
     }
 
     private void ReadInput()
     {
-        _tildePressed = Input.GetKeyDown(KeyCode.BackQuote);
-        _iPressed = Input.GetKeyDown(KeyCode.I);
+        _tildePressed  = Input.GetKeyDown(KeyCode.BackQuote);
+        _iPressed      = Input.GetKeyDown(KeyCode.I);
+        _escapePressed = Input.GetKeyDown(KeyCode.Escape);
     }
 
     private void TrySwitchConsole()
     {
         if (_tildePressed)
         {
+            if (pausePanel.gameObject.activeSelf)
+                return;
+            
             _consoleEnabled = !_consoleEnabled;
             console.gameObject.SetActive(_consoleEnabled);
         }
@@ -59,11 +70,20 @@ public class UI : MonoBehaviour
     {
         if (_iPressed)
         {
+            if (pausePanel.gameObject.activeSelf)
+                return;
+            
             _inventoryEnabled = !_inventoryEnabled;
             
             SetEnabledPlayerControl(!_inventoryEnabled);
             inventory.gameObject.SetActive(_inventoryEnabled);
         }
+    }
+
+    private void TrySwitchPause()
+    {
+        if (_escapePressed && !IsAnyWindowOpened())
+            pausePanel.ShowInverse();
     }
 
     private void SetEnabledPlayerControl( bool isEnabled )

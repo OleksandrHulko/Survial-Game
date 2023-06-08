@@ -47,12 +47,31 @@ public class TreeSpawner : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+
+        ResetStaticValues();
+        CalculateTreePoolCount();
         InitPool();
     }
 
     private void OnEnable()
     {
         SetSavedFelledTreesPositions();
+    }
+
+    private void ResetStaticValues()
+    {
+        _palmsPoolIdx    = 0;
+        _oaksPoolIdx     = 0;
+        _junipersPoolIdx = 0;
+        _pinesPoolIdx    = 0;
+    }
+
+    private void CalculateTreePoolCount()
+    {
+        int chunksCount = (int)Mathf.Pow((SettingsSaver.renderDistance * 2) + 1, 2);
+        int maxTreeCountInChunk = (int)Mathf.Pow((float)SettingsSaver.chunkWidth / DISTANCE_BETWEEN_TREES, 2);
+        
+        _eachTypeTreeCountInPool = (ushort)((chunksCount * maxTreeCountInChunk) / 3);
     }
 
     private void InitPool()
@@ -160,7 +179,7 @@ public class TreeSpawner : MonoBehaviour
         int yInitial = (DISTANCE_BETWEEN_TREES - (chunkVPY % DISTANCE_BETWEEN_TREES)) % DISTANCE_BETWEEN_TREES; // find iteration Y which lies on grid DISTANCE_BETWEEN_TREES x DISTANCE_BETWEEN_TREES in virtual coordinates.
         int xDisplacement = 0;
         int yDisplacement = 0;
-        int width = Settings.chunkWidth;
+        int width = SettingsSaver.chunkWidth;
         int listTreesCapacity = (int) Mathf.Pow(((width / DISTANCE_BETWEEN_TREES) + 1), 2);
         float height = 0.0f;
         

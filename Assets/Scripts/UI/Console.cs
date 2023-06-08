@@ -128,5 +128,25 @@ public class Console : MonoBehaviour
     {
         BuildingObjectsSpawner.buildingObjectInfos.Clear();
     }
+
+    public void AddHour()
+    {
+        TimeManager.GetInstance().AddHours();
+    }
+
+    public void SubtractHour()
+    {
+        TimeManager.GetInstance().AddHours(-1);
+    }
+
+    public void IncreaseRunSpeed()
+    {
+        Controller.ChangeRunSpeed(false);
+    }
+
+    public void SetNormalRunSpeed()
+    {
+        Controller.ChangeRunSpeed();
+    }
     #endregion
 }

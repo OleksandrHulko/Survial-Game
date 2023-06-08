@@ -26,6 +26,7 @@ public class ResetPositionManager : MonoBehaviour
     #region Private Methods
     private void OnEnable()
     {
+        _transforms = new List<Transform>();
         offset = SaveManager.GetInstance().playerPosition?.ToVector2Int() ?? Vector2Int.zero;
         StartCoroutine(CheckPosition());
     }

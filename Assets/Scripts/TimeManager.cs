@@ -54,9 +54,6 @@ public class TimeManager : MonoBehaviour
     {
         IncrementDayCycle();
         ControlSky();
-        //Debug.Log(GetTimeFromFirstDay());
-
-        //DynamicGI.UpdateEnvironment();
     }
 
     private void ControlSky()
@@ -111,13 +108,11 @@ public class TimeManager : MonoBehaviour
         {
             RenderSettings.skybox = nightSkybox;
             _usedNightSkybox = true;
-            Debug.Log("NIGHT");
         }
         else if ( !needToUseNightSkybox && _usedNightSkybox)
         {
             RenderSettings.skybox = daySkybox;
             _usedNightSkybox = false;
-            Debug.Log("DAY");
         }
     }
     
@@ -157,6 +152,16 @@ public class TimeManager : MonoBehaviour
     public (int days, float dayCycle) GetTimeValues()
     {
         return (_days, dayCycle);
+    }
+
+    public void AddHours(int hours = 1)
+    {
+        dayCycle += hours * (1 / 24f);
+        if (dayCycle < 0)
+        {
+            dayCycle = 1 + dayCycle;
+            _days--;
+        }
     }
     #endregion
 }

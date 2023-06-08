@@ -89,7 +89,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Exposure: 0.020000333
+    - _Exposure: 0.08005438
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -102,9 +102,9 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _Rotation: 0
-    - _RotationX: -16.400007
-    - _RotationY: 82.34544
-    - _RotationZ: -0.39394602
+    - _RotationX: -17.601088
+    - _RotationY: 80.380035
+    - _RotationZ: -1.5768288
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
