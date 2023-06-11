@@ -112,10 +112,6 @@ public class SaveManager : MonoBehaviour
     public void CheckValues()
     {
         Debug.Log($"{Storage.Objects.Count}");
-        foreach (var value in Storage.Objects)
-        {
-            Debug.Log(value);
-        }
     }
 
     public Vector3 GetPlayerPosition()
