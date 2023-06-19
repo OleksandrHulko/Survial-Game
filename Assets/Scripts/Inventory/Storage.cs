@@ -36,7 +36,6 @@ public static class Storage
     public static void TryRemove(ObjectType objectType, int count, out bool successfully)
     {
         int newCount = _objects[objectType] - count;
-
         successfully = newCount >= 0;
 
         if (successfully)
