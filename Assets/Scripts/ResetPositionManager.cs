@@ -57,9 +57,7 @@ public class ResetPositionManager : MonoBehaviour
         Vector3 offsetVector3 = new Vector3(offsetVector2Int.x, 0, offsetVector2Int.y);
 
         foreach (Transform t in _transforms)
-        {
             t.position -= offsetVector3;
-        }
         
         needDisplacement = false;
     }
