@@ -88,7 +88,6 @@ public class Player : MonoBehaviour
             return Vector3.zero;
         }
     }
-
     #endregion
 
     #region Public Methods
@@ -274,7 +273,6 @@ class BuildPlayerState : PlayerState
     protected override void Mouse2Handler()
     {
         TryDeleteBuildingObject();
-
         TryDeleteCurrentBuildingObject();
     }
     
