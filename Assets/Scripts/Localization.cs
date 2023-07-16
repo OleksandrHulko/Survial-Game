@@ -9,8 +9,8 @@ public static class Localization
     public const string BOARD           = "Дошка";
     public const string PLATE_1_X_1     = "Дерев'яна плита 1x1";
     public const string PLATE_2_X_2     = "Дерев'яна плита 2x2";
-    public const string PLATE_1_X_1_X_1 = "Дерев'яний Фундамент 1x1x1";
-    public const string PLATE_2_X_1_X_2 = "Дерев'яний Фундамент 2x1x2";
+    public const string PLATE_1_X_1_X_1 = "Дерев'яний фундамент 1x1x1";
+    public const string PLATE_2_X_1_X_2 = "Дерев'яний фундамент 2x1x2";
     public const string WINDOW_1_X_1    = "Дерев'яне вікно 1x1";
     public const string WINDOW_2_X_2    = "Дерев'яне вікно 2x2";
     public const string DOOR_1_X_2      = "Дерев'яні дввері 1x2";
